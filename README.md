@@ -362,7 +362,7 @@ pde/tvt/templates/document_table.html
                 <th style="width:350px;">Document Title</th>
                 <th style="width:200px;">Document Type</th>
                 <th style="width:150px;">Polarion ID</th>
-                <th style="width:100px;">Actions</th>
+                <th style="width:100px;"></th>
             </tr>
         </thead>
         <tbody>
@@ -403,6 +403,33 @@ pde/tvt/templates/document_table.html
 ```sh
 python manage.py makemigrations tvt
 python manage.py migrate
+```
+
+### Adding static files to html templates
+1. Create css file and load all css data to it
+pde/tvt/static/css/document_table.css
+
+2. Create js file to load all javascript to it
+pde/tvt/static/js/document_table.js
+```html
+<script src="{% static 'js/document_table.js' %}"></script>
+```
+
+3. Update template `pde/tvt/templates/document_table.html`
+```html
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/document_table.css' %}">
+```
+
+```sh
+python manage.py collectstatic
+```
+
+pde/pde/settings.py
+```py
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'tvt' / 'static']
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 ```
 
 <br>

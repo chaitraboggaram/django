@@ -5,7 +5,19 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{% block title %}Parallel Edits{% endblock %}</title>
 </head>
+
+<link rel="stylesheet" href="/static/css/base.css">
+
 <body>
+	<div class="navbar">
+		<img src="/static/images/tvt.svg" style="height:40px;" />
+		<ul>
+			<li><a href="../"><button type="button" class="btn-dark">Home</button></a></li>
+			<li><a href="../traces/"><button type="button" class="btn-dark">Traces</button></a></li>
+		</ul>
+	</div>
+
+	<h1 class="my-title">Trace Visualization Tool</h1>
 	{% block content %}
 		<p>This is the main page!</p>
 	{% endblock %}

@@ -1,0 +1,106 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    margin: 40px;
+    color: #333;
+}
+
+.sub-title {
+    font-size: 30px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.table-header {
+    font-size: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    margin-bottom: 20px;
+    background-color: #fff;
+    padding: 15px 20px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.action-form {
+    display: inline;
+}
+
+.delete-button {
+    background-color: #e74c3c;
+    padding: 6px 10px;
+    border-radius: 4px;
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #c0392b;
+}
+
+.add-button {
+    background-color: #3498db;
+    padding: 6px 10px;
+    border-radius: 4px;
+    color: white;
+}
+
+.add-button:hover {
+    background-color: #2980b9;
+}
+
+@media (max-width: 768px) {
+    th, td {
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    form {
+        padding: 10px;
+    }
+
+    button {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+}
+
+.table-input {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    flex-grow: 1;
+    min-height: var(--input-min-height);
+    padding: 0 var(--padding-horizontal);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    resize: none;
+}

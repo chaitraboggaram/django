@@ -1,56 +1,65 @@
 {% extends "base.html" %}
 
-{% block title %}Document Table{% endblock %}
+{% block title %}
+    Document Table
+{% endblock %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/document_table.css' %}">
 
 {% block content %}
-    <h2>Documents</h2>
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" name="add">➕ Add Document</button>
-    </form>
+    <h2 class="sub-title">Traces Table</h2>
 
     <table>
         <thead>
             <tr>
-                <th style="width:150px;">Agile PN</th>
-                <th style="width:150px;">Agile Rev</th>
-                <th style="width:350px;">Document Title</th>
-                <th style="width:200px;">Document Type</th>
-                <th style="width:150px;">Polarion ID</th>
-                <th style="width:100px;">Actions</th>
+                {% for h, w in headers %}
+                    <th class="table-header" style="width: {{ w }}px;">
+                        {{ h }}
+                    </th>
+                {% endfor %}
             </tr>
         </thead>
-        <tbody>
-            {% for doc in documents %}
-                <tr>
-                    <td>{{ doc.agile_pn }}</td>
-                    <td>{{ doc.agile_rev }}</td>
-                    <td>{{ doc.title }}</td>
-                    <td>{{ doc.doc_type }}</td>
-                    <td>{{ doc.polarion_id }}</td>
-                    <td>
-                        <form method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" name="delete" value="{{ doc.id }}">🗑️</button>
-                        </form>
-                    </td>
-                </tr>
-            {% empty %}
-                <tr><td colspan="6">No documents added yet.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
 
-    <script>
-        // Optional: Save table data in localStorage
-        document.addEventListener('DOMContentLoaded', function () {
-            const rows = Array.from(document.querySelectorAll('tbody tr')).map(tr => {
-                return Array.from(tr.querySelectorAll('td')).slice(0, 5).map(td => td.textContent.trim());
-            });
-            localStorage.setItem('simple_table_data', JSON.stringify(rows));
-            console.log("Saved table to localStorage:", rows);
-        });
-    </script>
+        <tbody>
+            {% if documents %}
+                {% for d in documents %}
+                    <tr>
+                        <td>{{ d.agile_pn }}</td>
+                        <td>{{ d.agile_rev }}</td>
+                        <td>{{ d.title }}</td>
+                        <td>{{ d.doc_type }}</td>
+                        <td>{{ d.polarion_id }}</td>
+                        <td>
+                            <form method="post" class="action-form">
+                                {% csrf_token %}
+                                <button type="submit" name="delete" value="{{ d.id }}" class="delete-button">🗑️</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+
+        <tfoot>
+            <tr>
+                <form method="post">
+                    {% csrf_token %}
+                    {% for h, w, i in table_placeholder %}
+                        <td>
+                            <input type="text" name="{{ i }}" placeholder="{{ h|title }}" style="width: {{ w }}px;">
+                        </td>
+                    {% endfor %}
+
+                    <td>
+                        <button type="submit" name="add" class="add-button">➕</button>
+                    </td>
+                </form>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/document_table.js' %}"></script>
 {% endblock %}
