@@ -1,4 +1,4 @@
-# Panel Integration with Django
+# Django
 ## Table of Contents
 1. [Initial Set Up](#Initial-Set-Up)
 	1.1. [Set Up a Virtual Environment](#1-set-up-a-virtual-environment)
@@ -254,6 +254,155 @@ from django.shortcuts import render
 
 def home(request):
 	return render(request, "home.html")
+```
+
+<br>
+
+---
+
+## Cookies/Sessions
+### Create a table to store some user data and isolate it from others
+pde/tvt/models.py
+```py
+from django.contrib.auth.models import User
+from django.db import models
+
+class Document(models.Model):
+    session_key = models.CharField(max_length=40, null=True, blank=True)
+    agile_pn = models.CharField(max_length=100, blank=True)
+    agile_rev = models.CharField(max_length=100, blank=True)
+    title = models.CharField("Document Title", max_length=255, blank=True)
+    doc_type = models.CharField("Document Type", max_length=100, blank=True)
+    polarion_id = models.CharField(max_length=100, blank=True)
+```
+
+pde/tvt/forms.py
+```py
+from django import forms
+from .models import Document
+
+class DocumentForm(forms.ModelForm):
+    class Meta:
+        model = Document
+        fields = ['agile_pn', 'agile_rev', 'title', 'doc_type', 'polarion_id']
+        widgets = {
+            'agile_pn': forms.TextInput(attrs={'placeholder': 'Agile PN'}),
+            'agile_rev': forms.TextInput(attrs={'placeholder': 'Agile Rev'}),
+            'title': forms.TextInput(attrs={'placeholder': 'Document Title'}),
+            'doc_type': forms.TextInput(attrs={'placeholder': 'Document Type'}),
+            'polarion_id': forms.TextInput(attrs={'placeholder': 'Polarion ID'}),
+        }
+```
+
+pde/tvt/views.py
+```py
+from django.shortcuts import render, redirect
+from .models import Document
+from .forms import DocumentForm
+
+def document_table_view(request):
+    if not request.session.session_key:
+        request.session.create()
+
+    session_key = request.session.session_key
+
+    if request.method == 'POST':
+        if 'add' in request.POST:
+            form = DocumentForm(request.POST)
+            if form.is_valid():
+                doc = form.save(commit=False)
+                doc.session_key = session_key
+                doc.save()
+                return redirect('document_table')
+        elif 'delete' in request.POST:
+            doc_id = request.POST.get('delete')
+            Document.objects.filter(id=doc_id, session_key=session_key).delete()
+
+    form = DocumentForm()
+    documents = Document.objects.filter(session_key=session_key)
+    return render(request, 'document_table.html', {'form': form, 'documents': documents})
+```
+
+pde/tvt/urls.py
+```py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.document_table_view, name='document_table'),
+]
+```
+
+pde/tvt/templates/document_table.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document Table</title>
+    <style>
+        table, th, td { border: 1px solid #ccc; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: left; }
+        th { background-color: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h2>Documents</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" name="add">➕ Add Document</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:150px;">Agile PN</th>
+                <th style="width:150px;">Agile Rev</th>
+                <th style="width:350px;">Document Title</th>
+                <th style="width:200px;">Document Type</th>
+                <th style="width:150px;">Polarion ID</th>
+                <th style="width:100px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doc in documents %}
+                <tr>
+                    <td>{{ doc.agile_pn }}</td>
+                    <td>{{ doc.agile_rev }}</td>
+                    <td>{{ doc.title }}</td>
+                    <td>{{ doc.doc_type }}</td>
+                    <td>{{ doc.polarion_id }}</td>
+                    <td>
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" name="delete" value="{{ doc.id }}">🗑️</button>
+                        </form>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="6">No documents added yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        // Optional: Save table data in localStorage
+        document.addEventListener('DOMContentLoaded', function () {
+            const rows = Array.from(document.querySelectorAll('tbody tr')).map(tr => {
+                return Array.from(tr.querySelectorAll('td')).slice(0, 5).map(td => td.textContent.trim());
+            });
+            localStorage.setItem('simple_table_data', JSON.stringify(rows));
+            console.log("Saved table to localStorage:", rows);
+        });
+    </script>
+</body>
+</html>
+```
+
+```sh
+python manage.py makemigrations tvt
+python manage.py migrate
 ```
 
 <br>

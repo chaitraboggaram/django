@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Document Table{% endblock %}
+
+{% block content %}
+    <h2>Documents</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" name="add">➕ Add Document</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:150px;">Agile PN</th>
+                <th style="width:150px;">Agile Rev</th>
+                <th style="width:350px;">Document Title</th>
+                <th style="width:200px;">Document Type</th>
+                <th style="width:150px;">Polarion ID</th>
+                <th style="width:100px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doc in documents %}
+                <tr>
+                    <td>{{ doc.agile_pn }}</td>
+                    <td>{{ doc.agile_rev }}</td>
+                    <td>{{ doc.title }}</td>
+                    <td>{{ doc.doc_type }}</td>
+                    <td>{{ doc.polarion_id }}</td>
+                    <td>
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" name="delete" value="{{ doc.id }}">🗑️</button>
+                        </form>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="6">No documents added yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        // Optional: Save table data in localStorage
+        document.addEventListener('DOMContentLoaded', function () {
+            const rows = Array.from(document.querySelectorAll('tbody tr')).map(tr => {
+                return Array.from(tr.querySelectorAll('td')).slice(0, 5).map(td => td.textContent.trim());
+            });
+            localStorage.setItem('simple_table_data', JSON.stringify(rows));
+            console.log("Saved table to localStorage:", rows);
+        });
+    </script>
+{% endblock %}
