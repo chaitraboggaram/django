@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/document_table.css' %}">
 
 {% block content %}
     <h2 class="sub-title">Traces Table</h2>
@@ -25,38 +24,39 @@
             {% if documents %}
                 {% for d in documents %}
                     <tr>
-                        <td>{{ d.agile_pn }}</td>
-                        <td>{{ d.agile_rev }}</td>
-                        <td>{{ d.title }}</td>
-                        <td>{{ d.doc_type }}</td>
-                        <td>{{ d.polarion_id }}</td>
+                        <td class="table-td center-class">{{ d.agile_pn }}</td>
+                        <td class="table-td center-class">{{ d.agile_rev }}</td>
+                        <td class="table-td">{{ d.title }}</td>
+                        <td class="table-td">{{ d.doc_type }}</td>
+                        <td class="table-td center-class">{{ d.polarion_id }}</td>
                         <td>
                             <form method="post" class="action-form">
                                 {% csrf_token %}
+                                <button type="submit" name="add" class="add-button">➕</button>
                                 <button type="submit" name="delete" value="{{ d.id }}" class="delete-button">🗑️</button>
                             </form>
                         </td>
                     </tr>
                 {% endfor %}
+                
+                {% if show_input_row %}
+                    <tr>
+                        <form method="post" id="input-form">
+                            {% include "partials/input_row.html" %}
+                        </form>
+                    </tr>
+                {% endif %}
+
+            {% else %}
+                <tr>
+                    <form method="post" id="empty-input-form">
+                        <tbody>
+                            {% include "partials/input_row.html" %}
+                        </tbody>
+                    </form>
+                </tr>
             {% endif %}
         </tbody>
-
-        <tfoot>
-            <tr>
-                <form method="post">
-                    {% csrf_token %}
-                    {% for h, w, i in table_placeholder %}
-                        <td>
-                            <input type="text" name="{{ i }}" placeholder="{{ h|title }}" style="width: {{ w }}px;">
-                        </td>
-                    {% endfor %}
-
-                    <td>
-                        <button type="submit" name="add" class="add-button">➕</button>
-                    </td>
-                </form>
-            </tr>
-        </tfoot>
     </table>
 {% endblock %}
 

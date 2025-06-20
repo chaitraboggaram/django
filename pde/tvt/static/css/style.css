@@ -1,3 +1,58 @@
+.my-title {
+    font-size: 50px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 14px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.navbar .logo {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+    text-decoration: none;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: #374151;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-dark {
+    background-color: #343a40;
+    color: #fff;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f9f9f9;
@@ -12,7 +67,7 @@ body {
 }
 
 .table-header {
-    font-size: 24px;
+    font-size: 18px;
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
     margin-bottom: 20px;
@@ -22,9 +77,7 @@ form {
     margin-bottom: 20px;
     background-color: #fff;
     padding: 15px 20px;
-    border: 1px solid #ddd;
     border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 button {
@@ -45,7 +98,6 @@ table {
     width: 100%;
     border-collapse: collapse;
     background-color: white;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
     border-radius: 6px;
     overflow: hidden;
 }
@@ -97,10 +149,39 @@ table {
     display: inline-block;
     width: 100%;
     flex-grow: 1;
-    min-height: var(--input-min-height);
-    padding: 0 var(--padding-horizontal);
+    min-height: 25px;
     background-color: #fff;
     border: 1px solid #ccc;
-    border-radius: var(--border-radius);
+    border-radius: 4px;
     resize: none;
+}
+
+body {
+    background-color: #ffffff;
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+
+.btn-warning {
+    color: #fff;
+    background-color: #f0ad4e;
+    border-color: #eea236;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
+
+.table-td {
+    padding: 2px 10px;
+}
+
+.center-class {
+    text-align: center;
 }
