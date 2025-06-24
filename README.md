@@ -1087,19 +1087,25 @@ def home(doc):
 ```
 
 <br>
+
 ---
+
 ## Sessions in Django
 ### Creating a session
 ```python
 request.session['key'] = 'value'
 ```
+
 <br>
+
 ### Reading a session
 ```python
 val = request.session['key']          # Raises KeyError if not found
 val = request.session.get('key')      # Returns None if not found
 ```
+
 <br>
+
 ### Passing session values to a Panel Django app
 `pde/tvt/views.py`
 ```python
@@ -1112,13 +1118,18 @@ def hello_world(request):
     script = server_document("/home/")
     return render(request, "home.html", {"script": script, "context": context})
 ```
+
 <br>
+
 `pde/tvt/templates/home.html`
 ```html
 {{ context.key }}
 ```
+
 <br>
+
 ---
+
 ## Cookies in Django
 ### Setting a cookie
 `pde/tvt/views.py`
@@ -1131,13 +1142,18 @@ def traces(request):
     response.set_cookie(key="key1", value="value1")
     return response
 ```
+
 <br>
+
 `pde/tvt/templates/traces.html`
 ```html
 {{ context.key }}
 ```
+
 <br>
+
 ---
+
 ### Setting a cookie with expiry (auto-deletion)
 `pde/tvt/views.py`
 ```python
@@ -1151,6 +1167,7 @@ def traces(request):
 ```
 
 <br>
+
 ### Reading a cookie
 `pde/tvt/views.py`
 ```python
@@ -1164,6 +1181,7 @@ def hello_world(request):
 {{ context }}
 ```
 <br>
+
 ### Passing JSON data via cookies
 ```python
 COLOR_DATA = [
@@ -1176,6 +1194,7 @@ COLOR_DATA = [
     {"color": "black", "value": "#000"},
 ]
 ```
+
 #### Storing JSON in a cookie
 `pde/tvt/views.py`
 ```python
@@ -1188,6 +1207,7 @@ def traces(request):
     response.set_cookie("color_data", json_data, max_age=3600)
     return response
 ```
+
 ### Retrieving JSON from a cookie
 `pde/tvt/views.py`
 ```python
@@ -1222,9 +1242,11 @@ def traces(request):
 
 ## Caching
 ### Using Javascript to cache
+1. Using `document.cookie`
 ```py
 storage_key = "simple_table_data"
 html = pn.pane.HTML("")
+EXPIRE = 900
 
 @staticmethod
 def save_to_cookies():
@@ -1238,4 +1260,33 @@ def save_to_cookies():
 ```
 
 <br>
+
+2. Using `localStorage`
+```py
+storage_key = "simple_table_data"
+html = pn.pane.HTML("")
+EXPIRE = 900
+
+@staticmethod
+def save_to_cookies():
+    pn.state.cookies[SimpleTable.storage_key] = json.dumps(SimpleTable.data)
+    data_str = json.dumps(SimpleTable.data).replace('"', '\\"')
+    expiry = (datetime.utcnow() + timedelta(seconds=SimpleTable.EXPIRE)).strftime(
+        "%a, %d %b %Y %H:%M:%S GMT"
+    )
+    SimpleTable.html.object = f"""
+    <script>
+        localStorage.setItem('{SimpleTable.storage_key}', '{data_str}')
+    </script>
+    """
+
+@staticmethod
+def load_from_cookies():
+    SimpleTable.html.object = f"""
+    <script>
+        const data = localStorage.getItem('{SimpleTable.storage_key}');
+        console.log('Data loaded from localStorage:', data);
+    </script>
+    """
+```
 
