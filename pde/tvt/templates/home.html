@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Home Page{% endblock %}
+{% block title %}
+    Document Table
+{% endblock %}
 
-{% block content %}
-	<p>This is the home page!</p>
+{% load static %}
+
+{% block content %}    
+	{% include "partials/document_table.html" %}
+
+    <script src="{% static 'js/document_table.js' %}"></script>
 {% endblock %}

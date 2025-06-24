@@ -19,18 +19,18 @@ def home(request):
                 doc.session_key = session_key
                 doc.save()
                 show_input_row = False
-                return redirect("document_table")
+                return redirect("home")
             else:
                 show_input_row = True
 
         elif "delete" in request.POST:
             doc_id = request.POST.get("delete")
             Document.objects.filter(id=doc_id, session_key=session_key).delete()
-            return redirect("document_table")
+            return redirect("home")
 
         elif "cancel" in request.POST:
             show_input_row = False
-            return redirect("document_table")
+            return redirect("home")
 
     else:
         form = DocumentForm()
@@ -62,7 +62,7 @@ def home(request):
         "show_input_row": show_input_row,
     }
 
-    return render(request, "document_table.html", context)
+    return render(request, "home.html", context)
 
 def traces(request):
     show_input_row = False
@@ -79,18 +79,18 @@ def traces(request):
                 doc.session_key = session_key
                 doc.save()
                 show_input_row = False
-                return redirect("document_table")
+                return redirect("traces")
             else:
                 show_input_row = True
 
         elif "delete" in request.POST:
             doc_id = request.POST.get("delete")
             Document.objects.filter(id=doc_id, session_key=session_key).delete()
-            return redirect("document_table")
+            return redirect("traces")
 
         elif "cancel" in request.POST:
             show_input_row = False
-            return redirect("document_table")
+            return redirect("traces")
 
     else:
         form = DocumentForm()
@@ -124,4 +124,4 @@ def traces(request):
         "script": script
     }
 
-    return render(request, "document_table.html", context)
+    return render(request, "traces.html", context)

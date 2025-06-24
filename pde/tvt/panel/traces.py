@@ -1,24 +1,33 @@
 import panel as pn
+from .cytoscape import Cytoscape as Cyto
+from .new_cyto import Cytoscape as NewCytoscape
 
 pn.extension()
 pn.config.raw_css.append('@import url("/static/css/style.css");')
 
 class Traces:
 	@staticmethod
-	def get_message():
+	def get_data():
 		tableTitle = pn.pane.Markdown(
 			"### Traces Table",
 			sizing_mode="stretch_width",
 			css_classes=["sub-title"]
 		)
 
-		panelTitle = pn.pane.Markdown(
-			"### Panel Page",
+		cytoTitle = pn.pane.Markdown(
+			"### Cytoscape",
 			sizing_mode="stretch_width",
 			css_classes=["sub-title"]
 		)
 
-		return pn.Column(
-			panelTitle,
-			tableTitle,
+		newCytoscapeTitle = pn.pane.Markdown(
+			"### New Cytoscape",
+			sizing_mode="stretch_width",
+			css_classes=["sub-title"]
 		)
+
+		cyto = Cyto.show_cytoscape()
+		new_cyto = NewCytoscape.show_cytoscape()
+		layout = pn.Column(newCytoscapeTitle, new_cyto, tableTitle)
+
+		return layout

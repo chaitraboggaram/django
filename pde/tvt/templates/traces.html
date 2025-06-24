@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Traces Page{% endblock %}
+{% block title %}
+	Document Table
+{% endblock %}
+
+{% load static %}
 
 {% block content %}
-	{{ script|safe }}
+	{{script|safe}}
+	{% include "partials/document_table.html" %}
+
+	<script src="{% static 'js/document_table.js' %}"></script>
 {% endblock %}
