@@ -41,23 +41,11 @@
     transition: background-color 0.2s, color 0.2s;
 }
 
-.btn-dark {
-    background-color: #343a40;
-    color: #fff;
-    padding: 6px 12px;
-    font-size: 14px;
-    font-weight: 500;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.15s ease-in-out;
-}
-
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f9f9f9;
     margin: 40px;
     color: #333;
+    background-color: #ffffff;
 }
 
 .sub-title {
@@ -80,20 +68,6 @@ form {
     border-radius: 6px;
 }
 
-button {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    font-size: 14px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #2980b9;
-}
-
 table {
     width: 100%;
     border-collapse: collapse;
@@ -106,42 +80,50 @@ table {
     display: inline;
 }
 
-.delete-button {
+.dark-btn {
+    background-color: #343a40;
+    padding: 6px 10px;
+    border-radius: 4px;
+    color: white;
+    font-size: 14px;
+}
+
+.dark-btn:hover {
+    background-color: #23272b;
+    color: #fff;
+}
+
+.delete-btn {
     background-color: #e74c3c;
     padding: 6px 10px;
     border-radius: 4px;
     color: white;
 }
 
-.delete-button:hover {
+.delete-btn:hover {
     background-color: #c0392b;
 }
 
-.add-button {
+.add-btn {
     background-color: #3498db;
     padding: 6px 10px;
     border-radius: 4px;
     color: white;
 }
 
-.add-button:hover {
+.add-btn:hover {
     background-color: #2980b9;
 }
 
-@media (max-width: 768px) {
-    th, td {
-        font-size: 13px;
-        padding: 10px;
-    }
+.success-btn {
+    background-color: #5cb85c;
+    padding: 6px 10px;
+    border-radius: 4px;
+    color: white;
+}
 
-    form {
-        padding: 10px;
-    }
-
-    button {
-        padding: 6px 12px;
-        font-size: 13px;
-    }
+.success-btn:hover {
+    background-color: #4cae4c;
 }
 
 .table-input {
@@ -154,28 +136,6 @@ table {
     border: 1px solid #ccc;
     border-radius: 4px;
     resize: none;
-}
-
-body {
-    background-color: #ffffff;
-}
-
-.btn-success {
-    color: #fff;
-    background-color: #5cb85c;
-    border-color: #4cae4c;
-}
-
-.btn-warning {
-    color: #fff;
-    background-color: #f0ad4e;
-    border-color: #eea236;
-}
-
-.btn-danger {
-    color: #fff;
-    background-color: #d9534f;
-    border-color: #d43f3a;
 }
 
 .table-td {

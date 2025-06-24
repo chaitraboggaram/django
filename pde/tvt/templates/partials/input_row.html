@@ -5,9 +5,8 @@
             <input type="text" name="{{ i }}" placeholder="{{ h|title }}" class="table-input">
         </td>
     {% endfor %}
-    <td class="action-buttons">
-        <button type="submit" id="add-row-button" name="add" class="btn-success" title="Done">✔️</button>
-        <!-- <button type="button" id="clear-row-button" class="btn-warning" title="Clear">🧹</button> -->
-        <button type="submit" name="cancel" value="true" class="btn-danger" title="Remove Row">❌</button>
+    <td class="table-td center-class">
+        <button type="submit" name="add" class="success-button" title="Done">✔️</button>
+        <button type="submit" name="cancel" value="true" class="delete-button" title="Remove Row">❌</button>
     </td>
 </tr>
