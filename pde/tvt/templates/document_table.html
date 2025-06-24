@@ -7,8 +7,8 @@
 {% load static %}
 
 {% block content %}
-    <h2 class="sub-title">Traces Table</h2>
-
+    {{ script|safe }}
+    
     <table>
         <thead>
             <tr>
@@ -58,6 +58,6 @@
             {% endif %}
         </tbody>
     </table>
-
+    
     <script src="{% static 'js/document_table.js' %}"></script>
 {% endblock %}
