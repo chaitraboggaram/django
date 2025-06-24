@@ -14,12 +14,4 @@ document.addEventListener('DOMContentLoaded', () => {
             inputs.forEach(input => input.value = '');
         });
     }
-
-    const removeBtn = document.getElementById('remove-row-button');
-    if (removeBtn) {
-        removeBtn.addEventListener('click', () => {
-            const row = removeBtn.closest('tr');
-            row.style.display = 'none';
-        });
-    }
 });

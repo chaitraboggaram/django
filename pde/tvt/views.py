@@ -16,12 +16,18 @@ def document_table_view(request):
                 doc = form.save(commit=False)
                 doc.session_key = session_key
                 doc.save()
+                show_input_row = False
                 return redirect('document_table')
             else:
                 show_input_row = True
+
         elif 'delete' in request.POST:
             doc_id = request.POST.get('delete')
             Document.objects.filter(id=doc_id, session_key=session_key).delete()
+            return redirect('document_table')
+
+        elif 'cancel' in request.POST:
+            show_input_row = False
             return redirect('document_table')
 
     else:

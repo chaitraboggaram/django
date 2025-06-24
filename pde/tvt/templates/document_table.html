@@ -45,6 +45,12 @@
                             {% include "partials/input_row.html" %}
                         </form>
                     </tr>
+                {% elif not documents %}
+                    <tr>
+                        <form method="post" id="empty-input-form">
+                            {% include "partials/input_row.html" %}
+                        </form>
+                    </tr>
                 {% endif %}
 
             {% else %}
@@ -58,8 +64,6 @@
             {% endif %}
         </tbody>
     </table>
-{% endblock %}
 
-{% block extra_js %}
     <script src="{% static 'js/document_table.js' %}"></script>
 {% endblock %}
