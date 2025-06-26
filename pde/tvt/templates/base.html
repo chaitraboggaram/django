@@ -6,14 +6,15 @@
 	<title>{% block title %}Parallel Edits{% endblock %}</title>
 </head>
 
-<link rel="stylesheet" href=".././static/css/style.css">
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}?v=2">
 
 <body>
 	<div class="navbar">
-		<img src="/static/images/tvt.svg" style="height:40px;" />
+		<img src="{% static 'images/tvt.svg' %}" style="height:40px;" />
 		<ul>
-			<li><a href="../"><button type="button" class="dark-btn">Home</button></a></li>
-			<li><a href="../traces/"><button type="button" class="dark-btn">Traces</button></a></li>
+			<li><a href="../"><button type="button" class="btn-dark">Home</button></a></li>
+			<li><a href="../traces/"><button type="button" class="btn-dark">Traces</button></a></li>
 		</ul>
 	</div>
 
