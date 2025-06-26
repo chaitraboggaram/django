@@ -273,7 +273,7 @@ class Document(models.Model):
     agile_rev = models.CharField(max_length=100, blank=True)
     title = models.CharField("Document Title", max_length=255, blank=True)
     doc_type = models.CharField("Document Type", max_length=100, blank=True)
-    polarion_id = models.CharField(max_length=100, blank=True)
+    doc_id = models.CharField(max_length=100, blank=True)
 ```
 
 pde/tvt/forms.py
@@ -284,13 +284,13 @@ from .models import Document
 class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
-        fields = ['agile_pn', 'agile_rev', 'title', 'doc_type', 'polarion_id']
+        fields = ['agile_pn', 'agile_rev', 'title', 'doc_type', 'doc_id']
         widgets = {
             'agile_pn': forms.TextInput(attrs={'placeholder': 'Agile PN'}),
             'agile_rev': forms.TextInput(attrs={'placeholder': 'Agile Rev'}),
             'title': forms.TextInput(attrs={'placeholder': 'Document Title'}),
             'doc_type': forms.TextInput(attrs={'placeholder': 'Document Type'}),
-            'polarion_id': forms.TextInput(attrs={'placeholder': 'Polarion ID'}),
+            'doc_id': forms.TextInput(attrs={'placeholder': 'Document ID'}),
         }
 ```
 
@@ -361,7 +361,7 @@ pde/tvt/templates/document_table.html
                 <th style="width:150px;">Agile Rev</th>
                 <th style="width:350px;">Document Title</th>
                 <th style="width:200px;">Document Type</th>
-                <th style="width:150px;">Polarion ID</th>
+                <th style="width:150px;">Document ID</th>
                 <th style="width:100px;"></th>
             </tr>
         </thead>
@@ -372,7 +372,7 @@ pde/tvt/templates/document_table.html
                     <td>{{ doc.agile_rev }}</td>
                     <td>{{ doc.title }}</td>
                     <td>{{ doc.doc_type }}</td>
-                    <td>{{ doc.polarion_id }}</td>
+                    <td>{{ doc.doc_id }}</td>
                     <td>
                         <form method="post" style="display:inline;">
                             {% csrf_token %}
@@ -1290,3 +1290,34 @@ def load_from_cookies():
     """
 ```
 
+## Passing aruguments from Django to Panel
+pde/tvt/views.py
+```py
+def traces(request):
+	script = server_document(f"/traces/", arguments={"documents": documents_data})
+	context = {
+		"script": script
+	}
+
+	return render(request, "traces.html", context)
+```
+
+pde/tvt/pn_app.py
+```py
+def traces(doc):
+	documents = doc.session_context.request.arguments['documents']
+	documents = documents[1:-1]
+```
+
+Convert the documents data from string to json
+```py
+import ast
+documents_list = ast.literal_eval(documents)
+document_data = {}
+
+for doc in documents_list:
+	doc_id = doc["id"]
+	new_doc = doc.copy()
+	new_doc["children"] = {}
+	document_data[doc_id] = new_doc
+```

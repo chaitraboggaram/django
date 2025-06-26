@@ -5,251 +5,318 @@ import ast
 
 pn.extension(sizing_mode="stretch_width")
 pn.config.raw_css.append(
-    """
-    .cytoscape-container {
-        border: 2px solid #444;
-        border-radius: 8px;
-        padding: 5px;
-        overflow: hidden;
-    }
+	"""
+	.cytoscape-container {
+		border: 2px solid #444;
+		border-radius: 8px;
+		padding: 5px;
+		overflow: hidden;
+	}
 """
 )
 
 
 class Cytoscape(JSComponent):
-    object = param.List()
-    layout = param.Selector(
-        default="cose",
-        objects=[
-            "breadthfirst",
-            "circle",
-            "concentric",
-            "cose",
-            "grid",
-            "preset",
-            "random",
-        ],
-    )
-    style = param.List(default=[], doc="Use to set the styles of the nodes/edges")
-    pan = param.Dict(default={"x": 0, "y": 0})
-    selected_nodes = param.List()
-    selected_edges = param.List()
-    root_node = param.String(default="")
+	object = param.List()
+	layout = param.Selector(
+		default="cose",
+		objects=[
+			"breadthfirst",
+			"circle",
+			"concentric",
+			"cose",
+			"grid",
+			"preset",
+			"random",
+		],
+	)
+	style = param.List(default=[], doc="Use to set the styles of the nodes/edges")
+	pan = param.Dict(default={"x": 0, "y": 0})
+	selected_nodes = param.List()
+	selected_edges = param.List()
+	root_node = param.String(default="")
 
-    _esm = """
-import { default as cytoscape} from "https://esm.sh/cytoscape"
+	_esm = """
+import { default as cytoscape } from "https://esm.sh/cytoscape"
 let cy = null;
 function removeCy() {
-    if (cy) { cy.destroy() }
+	if (cy) { cy.destroy() }
 }
 export function render({ model }) {
-    removeCy();
-    const div = document.createElement('div');
-    div.style.width = "100%";
-    div.style.height = "100%";
-    div.style.position = "relative";
-    model.on('after_render', () => {
-        cy = cytoscape({
-            container: div,
-            layout: {
-                name: model.layout,
-                roots: model.root_node || undefined
-            },
-            elements: model.object,
-            pan: model.pan
-        });
-        cy.style().resetToDefault().fromJson([
-    {
-        selector: 'node',
-        style: {
-            'background-color': 'data(color)',
-            'label': 'data(label)',
-            'color': '#fff',
-            'text-valign': 'center',
-            'text-halign': 'center',
-        }
-    },
-    {
-        selector: 'edge',
-        style: {
-            'width': 2,
-            'line-color': '#bbb',
-            'target-arrow-color': '#bbb',
-            'target-arrow-shape': 'triangle',
-            'curve-style': 'bezier'
-        }
-    }
-]).update();
+	removeCy();
+	const div = document.createElement('div');
+	div.style.width = "100%";
+	div.style.height = "100%";
+	div.style.position = "relative";
+	model.on('after_render', () => {
+		cy = cytoscape({
+			container: div,
+			layout: {
+				name: model.layout,
+				roots: model.root_node || undefined
+			},
+			elements: model.object,
+			pan: model.pan
+		});
+		cy.style().resetToDefault().fromJson([
+		{
+			selector: 'node',
+			style: {
+				'background-color': 'data(color)',
+				'label': 'data(label)',
+				'color': '#fff',
+				'text-valign': 'center',
+				'text-halign': 'center',
+				'shape': 'ellipse',
+				'text-wrap': 'wrap',
+				'text-max-width': '80%',
+				'font-size': '10px',
+				'text-overflow': 'ellipsis',
+				'width': 50,
+				'height': 50
+			}
+		},
+		{
+			selector: 'edge',
+			style: {
+				'width': 2,
+				'line-color': '#bbb',
+				'target-arrow-color': '#bbb',
+				'target-arrow-shape': 'triangle',
+				'curve-style': 'bezier'
+			}
+		}
+		]).update();
 
-        const tooltip = document.createElement('div');
-        tooltip.style.position = 'absolute';
-        tooltip.style.background = 'rgba(0,0,0,0.7)';
-        tooltip.style.color = 'white';
-        tooltip.style.padding = '2px 6px';
-        tooltip.style.borderRadius = '4px';
-        tooltip.style.pointerEvents = 'none';
-        tooltip.style.fontSize = '12px';
-        tooltip.style.zIndex = '9999';
-        tooltip.style.display = 'none';
-        document.body.appendChild(tooltip);
+		const tooltip = document.createElement('div');
+		tooltip.style.position = 'absolute';
+		tooltip.style.background = 'rgba(0,0,0,0.7)';
+		tooltip.style.color = 'white';
+		tooltip.style.padding = '2px 6px';
+		tooltip.style.borderRadius = '4px';
+		tooltip.style.pointerEvents = 'none';
+		tooltip.style.fontSize = '12px';
+		tooltip.style.zIndex = '9999';
+		tooltip.style.display = 'none';
+		document.body.appendChild(tooltip);
 
-        cy.on('mouseover', 'node', (evt) => {
-            const node = evt.target;
-            tooltip.textContent = node.data('label') || node.id();
-            const pos = evt.renderedPosition;
-            const containerRect = cy.container().getBoundingClientRect();
-            tooltip.style.left = (containerRect.left + pos.x + 10) + 'px';
-            tooltip.style.top = (containerRect.top + pos.y + 10) + 'px';
-            tooltip.style.display = 'block';
-        });
-        cy.on('mouseout', 'node', () => {
-            tooltip.style.display = 'none';
-        });
+		cy.on('mouseover', 'node', (evt) => {
+			const node = evt.target;
+			tooltip.textContent = node.data('label') || node.id();
+			const pos = evt.renderedPosition;
+			const containerRect = cy.container().getBoundingClientRect();
+			tooltip.style.left = (containerRect.left + pos.x + 10) + 'px';
+			tooltip.style.top = (containerRect.top + pos.y + 10) + 'px';
+			tooltip.style.display = 'block';
+		});
+		cy.on('mouseout', 'node', () => {
+			tooltip.style.display = 'none';
+		});
 
-        cy.on('select unselect', function (evt) {
-            model.selected_nodes = cy.elements('node:selected').map(el => el.id());
-            model.selected_edges = cy.elements('edge:selected').map(el => el.id());
-        });
-        model.on('object', () => {cy.json({elements: model.object});});
-        model.on('layout', () => {cy.layout({name: model.layout, roots: model.root_node || undefined}).run()});
-        model.on('pan', () => {cy.pan(model.pan)});
-        model.on('style', () => {cy.style().resetToDefault().append(model.style).update()});
-        model.on('select_node', (node_id) => {
-            cy.elements().unselect();
-            const node = cy.$id(node_id);
-            if(node) {
-                node.select();
-                cy.center(node);
-            }
-        });
-        window.addEventListener('resize', function(event){
-            cy.center();
-        });
-        model.on('remove', removeCy);
-    });
-    return div;
+		cy.on('select unselect', function (evt) {
+			model.selected_nodes = cy.elements('node:selected').map(el => el.id());
+			model.selected_edges = cy.elements('edge:selected').map(el => el.id());
+		});
+
+		model.on('object', () => { cy.json({ elements: model.object }); });
+		model.on('layout', () => { cy.layout({ name: model.layout, roots: model.root_node || undefined }).run() });
+		model.on('pan', () => { cy.pan(model.pan) });
+		model.on('style', () => { cy.style().resetToDefault().append(model.style).update() });
+		model.on('select_node', (node_id) => {
+			cy.elements().unselect();
+			const node = cy.$id(node_id);
+			if (node) {
+				node.select();
+				cy.center(node);
+			}
+		});
+
+		window.addEventListener('resize', function (event) {
+			cy.center();
+		});
+
+		model.on('remove', removeCy);
+	});
+	return div;
 }
 """
 
-    @staticmethod
-    def show_cytoscape(documents):
-        documents_list = ast.literal_eval(documents)
-        print(f"Documents list: {documents_list}")
+	@staticmethod
+	def show_cytoscape(documents):
+		if not documents:
+			print("No documents found, returning empty graph.")
+			empty_style = [
+				{
+					"selector": "node",
+					"style": {
+						"width": 80,
+						"height": 50,
+						"label": "",
+					},
+				},
+				{
+					"selector": "edge",
+					"style": {
+						"width": 2,
+						"line-color": "#bbb",
+						"target-arrow-color": "#bbb",
+						"target-arrow-shape": "triangle",
+						"curve-style": "bezier",
+					},
+				},
+			]
+			empty_graph = Cytoscape(
+				object=[],
+				style=empty_style,
+				root_node="",
+				sizing_mode="stretch_width",
+				height=600,
+				css_classes=["cytoscape-container"],
+			)
 
-        document_data = {}
-        for doc in documents_list:
-            doc_id = doc["id"]
-            new_doc = doc.copy()
-            new_doc["children"] = {}
-            document_data[doc_id] = new_doc
+			layout = pn.Column(
+				pn.Row(
+					pn.Param(
+						empty_graph,
+						parameters=["layout", "pan", "selected_nodes", "selected_edges"],
+						sizing_mode="fixed",
+						width=300,
+					),
+					empty_graph,
+				),
+				pn.Spacer(height=30),
+			)
+			return layout
 
-        print(f"Converted data list: {document_data}")
-        pn.extension("cytoscape", sizing_mode="stretch_width")
+		else:
+			documents_list = ast.literal_eval(documents)
+			print(f"Documents list: {documents_list}")
+			document_data = {}
 
-        type_color_map = {
-            "Requirement": "#1f77b4",
-            "Design": "#ff7f0e",
-            "Test": "#2ca02c",
-            "Specification": "#d62728",
-            "Task": "#9467bd",
-            "Development": "#8c564b",
-            "Risk": "#e377c2",
-            "Unknown": "gray",
-        }
+			for doc in documents_list:
+				doc_id = doc["id"]
+				new_doc = doc.copy()
+				new_doc["children"] = {}
+				document_data[doc_id] = new_doc
 
-        nodes = {}
-        edges = []
-        all_nodes = set()
-        has_parents = set()
+		print(f"Converted data list: {document_data}")
 
-        def ensure_node_exists(node_id, data=None):
-            if node_id in nodes:
-                return
-            node_info = {"id": node_id}
-            if data:
-                node_info.update(data)
+		pn.extension("cytoscape", sizing_mode="stretch_width")
 
-            doc_type = node_info.get("doc_type", "")
-            color = type_color_map.get(doc_type, "gray")
+		type_color_map = {
+			"Requirement": "#1f77b4",
+			"Design": "#ff7f0e",
+			"Test": "#2ca02c",
+			"Specification": "#d62728",
+			"Task": "#9467bd",
+			"Development": "#8c564b",
+			"Risk": "#e377c2",
+			"Unknown": "gray",
+		}
 
-            nodes[node_id] = {
-                "data": {
-                    "id": node_id,
-                    "label": node_id,
-                    "color": color,
-                },
-                **({"classes": doc_type.lower()} if doc_type else {}),
-            }
+		nodes = {}
+		edges = []
+		all_nodes = set()
+		has_parents = set()
 
-        def recurse(node_dict):
-            node_id = node_dict["id"]
-            meta = {k: v for k, v in node_dict.items() if k not in ("id", "children")}
-            ensure_node_exists(node_id, meta)
-            all_nodes.add(node_id)
+		def ensure_node_exists(node_id, data=None):
+			if node_id in nodes:
+				return
+			node_info = {"id": node_id}
+			if data:
+				node_info.update(data)
 
-            for child_id, child_obj in node_dict.get("children", {}).items():
-                recurse(child_obj)
-                edges.append(
-                    {
-                        "data": {
-                            "id": f"{node_id}-{child_id}",
-                            "source": node_id,
-                            "target": child_id,
-                        }
-                    }
-                )
-                has_parents.add(child_id)
+			doc_type = node_info.get("doc_type", "")
+			color = type_color_map.get(doc_type, "gray")
+			label = str(node_id)
+			if "title" in data and data["title"]:
+				label = data["title"][:50]
 
-        for top in document_data.values():
-            recurse(top)
+			nodes[node_id] = {
+				"data": {
+					"id": node_id,
+					"label": label,
+					"color": color,
+				},
+				**({"classes": doc_type.lower()} if doc_type else {}),
+			}
 
-        root_nodes = list(all_nodes - has_parents)
-        roots_selector = ", ".join(f"#{r}" for r in root_nodes) if root_nodes else None
+		def recurse(node_dict):
+			node_id = node_dict["id"]
+			meta = {k: v for k, v in node_dict.items() if k not in ("id", "children")}
+			ensure_node_exists(node_id, meta)
+			all_nodes.add(node_id)
 
-        elements = list(nodes.values()) + edges
+			for child_id, child_obj in node_dict.get("children", {}).items():
+				recurse(child_obj)
+				edges.append(
+					{
+						"data": {
+							"id": f"{node_id}-{child_id}",
+							"source": node_id,
+							"target": child_id,
+						}
+					}
+				)
+				has_parents.add(child_id)
 
-        default_style = [
-            {
-                "selector": "node",
-                "style": {
-                    "background-color": "data(color)",
-                    "label": "data(label)",
-                    "color": "#fff",
-                    "text-valign": "center",
-                    "text-halign": "center",
-                },
-            },
-            {
-                "selector": "edge",
-                "style": {
-                    "width": 2,
-                    "line-color": "#bbb",
-                    "target-arrow-color": "#bbb",
-                    "target-arrow-shape": "triangle",
-                    "curve-style": "bezier",
-                },
-            },
-        ]
+		for top in document_data.values():
+			recurse(top)
 
-        graph = Cytoscape(
-            object=elements,
-            style=default_style,
-            root_node=roots_selector,
-            sizing_mode="stretch_width",
-            height=600,
-            css_classes=["cytoscape-container"],
-        )
+		root_nodes = list(all_nodes - has_parents)
+		roots_selector = ", ".join(f"#{r}" for r in root_nodes) if root_nodes else None
 
-        layout = pn.Column(
-            pn.Row(
-                pn.Param(
-                    graph,
-                    parameters=["layout", "pan", "selected_nodes", "selected_edges"],
-                    sizing_mode="fixed",
-                    width=300,
-                ),
-                graph,
-            ),
-            pn.Spacer(height=30),
-        )
-        return layout
+		elements = list(nodes.values()) + edges
+
+		default_style = [
+			{
+				"selector": "node",
+				"style": {
+					"background-color": "data(color)",
+					"label": "data(label)",
+					"color": "#fff",
+					"text-valign": "center",
+					"text-halign": "center",
+					"shape": "ellipse",
+					"text-wrap": "wrap",
+					"text-max-width": "80%",
+					"font-size": "10px",
+					"text-overflow": "ellipsis",
+					"width": 80,
+					"height": 50,
+				},
+			},
+			{
+				"selector": "edge",
+				"style": {
+					"width": 2,
+					"line-color": "#bbb",
+					"target-arrow-color": "#bbb",
+					"target-arrow-shape": "triangle",
+					"curve-style": "bezier",
+				},
+			},
+		]
+
+		graph = Cytoscape(
+			object=elements,
+			style=default_style,
+			root_node=roots_selector,
+			sizing_mode="stretch_width",
+			height=600,
+			css_classes=["cytoscape-container"],
+		)
+
+		layout = pn.Column(
+			pn.Row(
+				pn.Param(
+					graph,
+					parameters=["layout", "pan", "selected_nodes", "selected_edges"],
+					sizing_mode="fixed",
+					width=300,
+				),
+				graph,
+			),
+			pn.Spacer(height=30),
+		)
+		return layout

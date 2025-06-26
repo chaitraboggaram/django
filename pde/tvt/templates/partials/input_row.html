@@ -5,7 +5,20 @@
     {% csrf_token %}
     {% for h, w, i, a in table_placeholder %}
         <td class="table-td">
-            <input type="text" name="{{ i }}" placeholder="{{ h|title }}" class="table-input">
+            {% if i == "doc_type" %}
+                <select name="{{ i }}" class="table-input" required>
+                    <option value="" disabled selected>-- Select --</option>
+                    <option value="Requirement">Requirement</option>
+                    <option value="Design">Design</option>
+                    <option value="Test">Test</option>
+                    <option value="Specification">Specification</option>
+                    <option value="Task">Task</option>
+                    <option value="Development">Development</option>
+                    <option value="Risk">Risk</option>
+                </select>
+            {% else %}
+                <input type="text" name="{{ i }}" placeholder="{{ h|title }}" class="table-input" required>
+            {% endif %}
         </td>
     {% endfor %}
     <td class="table-td center-class">
