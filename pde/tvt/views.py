@@ -114,7 +114,7 @@ def traces(request):
         ("Polarion ID", 150, "polarion_id", "center"),
     ]
 
-    script = server_document("/traces/")
+    script = server_document(f"/traces/", arguments={"session_key": session_key})
     context = {
         "form": form,
         "documents": documents,

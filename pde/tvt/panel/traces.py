@@ -7,7 +7,7 @@ pn.config.raw_css.append('@import url("/static/css/style.css");')
 
 class Traces:
 	@staticmethod
-	def get_data():
+	def get_data(session_key):
 		tableTitle = pn.pane.Markdown(
 			"### Traces Table",
 			sizing_mode="stretch_width",
@@ -21,7 +21,7 @@ class Traces:
 		)
 
 		newCytoscapeTitle = pn.pane.Markdown(
-			"### New Cytoscape",
+			f"### New Cytoscape - Session ID: {session_key}",
 			sizing_mode="stretch_width",
 			css_classes=["sub-title"]
 		)
