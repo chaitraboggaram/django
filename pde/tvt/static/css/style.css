@@ -53,6 +53,11 @@
     transition: background-color 0.15s ease-in-out;
 }
 
+.btn-dark:hover {
+    background-color: #23272b;
+    color: #fff;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 40px;
@@ -78,20 +83,6 @@ form {
     background-color: #fff;
     padding: 15px 20px;
     border-radius: 6px;
-}
-
-button {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 6px 10px;
-    font-size: 14px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #2980b9;
 }
 
 table {
@@ -129,7 +120,9 @@ table {
 }
 
 @media (max-width: 768px) {
-    th, td {
+
+    th,
+    td {
         font-size: 13px;
         padding: 10px;
     }
@@ -185,5 +178,5 @@ table {
 tbody tr {
     background: #ffffff;
     border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
 }

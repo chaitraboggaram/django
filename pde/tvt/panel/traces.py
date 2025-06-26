@@ -1,6 +1,6 @@
 import panel as pn
 from .cytoscape import Cytoscape as Cyto
-from .new_cyto import Cytoscape as NewCytoscape
+import json
 
 pn.extension()
 pn.config.raw_css.append('@import url("/static/css/style.css");')
@@ -20,13 +20,8 @@ class Traces:
 			css_classes=["sub-title"]
 		)
 
-		django_data = pn.pane.Markdown(
-			f"Django Data: {documents}",
-			sizing_mode="stretch_width",
-			css_classes=["sub-title"]
-		)
-
-		cyto = Cyto.show_cytoscape()
-		layout = pn.Column(cytoTitle, django_data, cyto, tableTitle)
+		documents = documents[1:-1]
+		cyto = Cyto.show_cytoscape(documents)
+		layout = pn.Column(cytoTitle, cyto, tableTitle)
 
 		return layout

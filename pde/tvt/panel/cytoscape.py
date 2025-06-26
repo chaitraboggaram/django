@@ -1,8 +1,7 @@
 import param
 import panel as pn
 from panel.custom import JSComponent
-import json
-import os
+import ast
 
 pn.extension(sizing_mode="stretch_width")
 pn.config.raw_css.append(
@@ -133,14 +132,19 @@ export function render({ model }) {
 """
 
     @staticmethod
-    def show_cytoscape():
+    def show_cytoscape(documents):
+        documents_list = ast.literal_eval(documents)
+        print(f"Documents list: {documents_list}")
+
+        document_data = {}
+        for doc in documents_list:
+            doc_id = doc["id"]
+            new_doc = doc.copy()
+            new_doc["children"] = {}
+            document_data[doc_id] = new_doc
+
+        print(f"Converted data list: {document_data}")
         pn.extension("cytoscape", sizing_mode="stretch_width")
-
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        json_path = os.path.join(base_dir, "input.json")
-
-        with open(json_path, "r") as f:
-            nodes_data = json.load(f)
 
         type_color_map = {
             "Requirement": "#1f77b4",
@@ -149,6 +153,8 @@ export function render({ model }) {
             "Specification": "#d62728",
             "Task": "#9467bd",
             "Development": "#8c564b",
+            "Risk": "#e377c2",
+            "Unknown": "gray",
         }
 
         nodes = {}
@@ -163,7 +169,7 @@ export function render({ model }) {
             if data:
                 node_info.update(data)
 
-            doc_type = node_info.get("Document Type", "")
+            doc_type = node_info.get("doc_type", "")
             color = type_color_map.get(doc_type, "gray")
 
             nodes[node_id] = {
@@ -194,7 +200,7 @@ export function render({ model }) {
                 )
                 has_parents.add(child_id)
 
-        for top in nodes_data.values():
+        for top in document_data.values():
             recurse(top)
 
         root_nodes = list(all_nodes - has_parents)
@@ -234,8 +240,6 @@ export function render({ model }) {
             css_classes=["cytoscape-container"],
         )
 
-        load_btn = pn.widgets.Button(name="Load Table", button_type="primary", width=50, height=50)
-
         layout = pn.Column(
             pn.Row(
                 pn.Param(
@@ -246,6 +250,6 @@ export function render({ model }) {
                 ),
                 graph,
             ),
-            pn.Row(pn.layout.HSpacer(), load_btn, pn.layout.HSpacer()),
+            pn.Spacer(height=30),
         )
         return layout
