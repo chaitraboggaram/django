@@ -5,6 +5,6 @@ pn.config.raw_css.append('@import url("/static/css/style.css");')
 pn.extension()
 
 def traces(doc):
-	session_key = doc.session_context.request.arguments['session_key']  # Bokeh way
-	content = Traces.get_data(session_key=session_key)
+	documents = doc.session_context.request.arguments['documents']  # Bokeh way
+	content = Traces.get_data(documents=documents)
 	content.server_doc(doc)

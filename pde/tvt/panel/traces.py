@@ -7,7 +7,7 @@ pn.config.raw_css.append('@import url("/static/css/style.css");')
 
 class Traces:
 	@staticmethod
-	def get_data(session_key):
+	def get_data(documents):
 		tableTitle = pn.pane.Markdown(
 			"### Traces Table",
 			sizing_mode="stretch_width",
@@ -20,14 +20,13 @@ class Traces:
 			css_classes=["sub-title"]
 		)
 
-		newCytoscapeTitle = pn.pane.Markdown(
-			f"### New Cytoscape - Session ID: {session_key}",
+		django_data = pn.pane.Markdown(
+			f"Django Data: {documents}",
 			sizing_mode="stretch_width",
 			css_classes=["sub-title"]
 		)
 
 		cyto = Cyto.show_cytoscape()
-		new_cyto = NewCytoscape.show_cytoscape()
-		layout = pn.Column(newCytoscapeTitle, new_cyto, tableTitle)
+		layout = pn.Column(cytoTitle, django_data, cyto, tableTitle)
 
 		return layout
