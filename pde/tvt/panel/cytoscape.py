@@ -194,6 +194,7 @@ export function render({ model }) {
 			document_data = {}
 
 			for doc in documents_list:
+				print(doc["id"])
 				doc_id = doc["id"]
 				new_doc = doc.copy()
 				new_doc["children"] = {}

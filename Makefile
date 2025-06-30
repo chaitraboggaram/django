@@ -18,7 +18,7 @@ migrate:
 	cd pde && python manage.py makemigrations tvt && python manage.py migrate
 
 # Collect static files
-collectstatic:
+stat:
 	cd pde && python manage.py collectstatic --noinput
 
 # Run the development server
@@ -26,4 +26,4 @@ run:
 	cd pde && python manage.py runserver
 
 # Do everything in order
-all: install migrate collectstatic run
+all: install migrate stat run
