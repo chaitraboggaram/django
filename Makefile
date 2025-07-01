@@ -27,3 +27,5 @@ run:
 
 # Do everything in order
 all: install migrate stat run
+
+reset: migrate stat run

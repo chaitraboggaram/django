@@ -2,50 +2,58 @@
 <link rel="stylesheet" href="{% static 'css/style.css' %}?v=3">
 
 <table>
-    <thead>
-        <tr>
-            {% for h, w in headers %}
-                <th class="table-header" style="width: {{ w }}px;">
-                    {{ h }}
-                </th>
-            {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-        {% if documents %}
-            {% for d in documents %}
-                <tr>
-                    <td class="table-td center-class">{{ d.agile_pn }}</td>
-                    <td class="table-td center-class">{{ d.agile_rev }}</td>
-                    <td class="table-td">{{ d.title }}</td>
-                    <td class="table-td">{{ d.doc_type }}</td>
-                    <td class="table-td center-class">{{ d.doc_id }}</td>
-                    <td class="table-td center-class">
-                        <form method="post" class="action-form">
-                            {% csrf_token %}
-                            <button type="submit" name="add" class="add-button">➕</button>
-                            <button type="submit" name="edit" class="edit-btn" title="Edit">✏️</button>
-                            <button type="submit" name="delete" value="{{ d.id }}" class="delete-button">🗑️</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-            
-            {% if show_input_row %}
-                <tr>
-                    <form method="post" id="input-form">
-                        {% include "partials/input_row.html" %}
-                    </form>
-                </tr>
-            {% endif %}
-        {% else %}
-            <tr>
-                <form method="post" id="empty-input-form">
-                    <tbody>
-                        {% include "partials/input_row.html" %}
-                    </tbody>
-                </form>
-            </tr>
-        {% endif %}
-    </tbody>
+	<thead>
+		<tr>
+			{% for h, w in headers %}
+			<th class="table-header" style="width: {{ w }}px;">
+				{{ h }}
+			</th>
+			{% endfor %}
+		</tr>
+	</thead>
+	<tbody>
+		{% if documents %}
+		{% for d in documents %}
+		{% if edit_id and d.id|stringformat:"s" == edit_id|stringformat:"s" %}
+		<form method="post" class="edit-form">
+			{% csrf_token %}
+			<input type="hidden" name="edit_id" value="{{ d.id }}">
+			{% include "partials/edit_row.html" with edit_id=d.id table_placeholder=table_placeholder %}
+		</form>
+		{% else %}
+		<tr>
+			<td class="table-td center-class">{{ d.agile_pn }}</td>
+			<td class="table-td center-class">{{ d.agile_rev }}</td>
+			<td class="table-td">{{ d.title }}</td>
+			<td class="table-td">{{ d.doc_type }}</td>
+			<td class="table-td center-class">{{ d.doc_id }}</td>
+			<td class="table-td center-class">
+				<form method="post" class="action-form">
+					{% csrf_token %}
+					<button type="submit" name="add" class="add-button">➕</button>
+					<button type="submit" name="edit" value="{{ d.id }}" class="edit-btn" title="Edit">✏️</button>
+					<button type="submit" name="delete" value="{{ d.id }}" class="delete-button">🗑️</button>
+				</form>
+			</td>
+		</tr>
+		{% endif %}
+		{% endfor %}
+
+		{% if show_input_row %}
+		<tr>
+			<form method="post" id="input-form">
+				{% include "partials/input_row.html" %}
+			</form>
+		</tr>
+		{% endif %}
+		{% else %}
+		<tr>
+			<form method="post" id="empty-input-form">
+	<tbody>
+		{% include "partials/input_row.html" %}
+	</tbody>
+	</form>
+	</tr>
+	{% endif %}
+	</tbody>
 </table>

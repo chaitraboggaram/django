@@ -141,174 +141,86 @@ export function render({ model }) {
 }
 """
 
+	TYPE_COLOR_MAP = {
+		"Requirement": "#1f77b4",
+		"Design": "#ff7f0e",
+		"Test": "#2ca02c",
+		"Specification": "#d62728",
+		"Task": "#9467bd",
+		"Development": "#8c564b",
+		"Risk": "#e377c2",
+		"Unknown": "gray",
+	}
+
+
+	DEFAULT_STYLE = [
+		{
+			"selector": "node",
+			"style": {
+				"background-color": "data(color)",
+				"label": "data(label)",
+				"color": "#fff",
+				"text-valign": "center",
+				"text-halign": "center",
+				"shape": "ellipse",
+				"text-wrap": "wrap",
+				"text-max-width": "80%",
+				"font-size": "10px",
+				"text-overflow": "ellipsis",
+				"width": 80,
+				"height": 50,
+			},
+		},
+		{
+			"selector": "edge",
+			"style": {
+				"width": 2,
+				"line-color": "#bbb",
+				"target-arrow-color": "#bbb",
+				"target-arrow-shape": "triangle",
+				"curve-style": "bezier",
+			},
+		},
+	]
+
 	@staticmethod
-	def show_cytoscape(documents):
-		if not documents:
-			print("No documents found, returning empty graph.")
-			empty_style = [
-				{
-					"selector": "node",
-					"style": {
-						"width": 80,
-						"height": 50,
-						"label": "",
-					},
-				},
-				{
-					"selector": "edge",
-					"style": {
-						"width": 2,
-						"line-color": "#bbb",
-						"target-arrow-color": "#bbb",
-						"target-arrow-shape": "triangle",
-						"curve-style": "bezier",
-					},
-				},
-			]
-			empty_graph = Cytoscape(
-				object=[],
-				style=empty_style,
-				root_node="",
-				sizing_mode="stretch_width",
-				height=600,
-				css_classes=["cytoscape-container"],
-			)
-
-			layout = pn.Column(
-				pn.Row(
-					pn.Param(
-						empty_graph,
-						parameters=["layout", "pan", "selected_nodes", "selected_edges"],
-						sizing_mode="fixed",
-						width=300,
-					),
-					empty_graph,
-				),
-				pn.Spacer(height=30),
-			)
-			return layout
-
-		else:
-			documents_list = ast.literal_eval(documents)
-			print(f"Documents list: {documents_list}")
-			document_data = {}
-
-			for doc in documents_list:
-				print(doc["id"])
-				doc_id = doc["id"]
-				new_doc = doc.copy()
-				new_doc["children"] = {}
-				document_data[doc_id] = new_doc
-
-		print(f"Converted data list: {document_data}")
-
-		pn.extension("cytoscape", sizing_mode="stretch_width")
-
-		type_color_map = {
-			"Requirement": "#1f77b4",
-			"Design": "#ff7f0e",
-			"Test": "#2ca02c",
-			"Specification": "#d62728",
-			"Task": "#9467bd",
-			"Development": "#8c564b",
-			"Risk": "#e377c2",
-			"Unknown": "gray",
+	def ensure_node_exists(node_id, nodes, doc_type, label):
+		if node_id in nodes:
+			return
+		color = Cytoscape.TYPE_COLOR_MAP.get(doc_type, "gray")
+		nodes[node_id] = {
+			"data": {
+				"id": node_id,
+				"label": label,
+				"color": color,
+			},
+			"classes": doc_type.lower() if doc_type else "",
 		}
 
-		nodes = {}
-		edges = []
-		all_nodes = set()
-		has_parents = set()
+	@staticmethod
+	def recurse(node_dict, nodes, edges, all_nodes, has_parents):
+		node_id = node_dict["id"]
+		doc_type = node_dict.get("doc_type", "")
+		label = node_dict.get("title", str(node_id))[:50]
+		Cytoscape.ensure_node_exists(node_id, nodes, doc_type, label)
+		all_nodes.add(node_id)
 
-		def ensure_node_exists(node_id, data=None):
-			if node_id in nodes:
-				return
-			node_info = {"id": node_id}
-			if data:
-				node_info.update(data)
-
-			doc_type = node_info.get("doc_type", "")
-			color = type_color_map.get(doc_type, "gray")
-			label = str(node_id)
-			if "title" in data and data["title"]:
-				label = data["title"][:50]
-
-			nodes[node_id] = {
-				"data": {
-					"id": node_id,
-					"label": label,
-					"color": color,
-				},
-				**({"classes": doc_type.lower()} if doc_type else {}),
-			}
-
-		def recurse(node_dict):
-			node_id = node_dict["id"]
-			meta = {k: v for k, v in node_dict.items() if k not in ("id", "children")}
-			ensure_node_exists(node_id, meta)
-			all_nodes.add(node_id)
-
-			for child_id, child_obj in node_dict.get("children", {}).items():
-				recurse(child_obj)
-				edges.append(
-					{
-						"data": {
-							"id": f"{node_id}-{child_id}",
-							"source": node_id,
-							"target": child_id,
-						}
+		for child_id, child_obj in node_dict.get("children", {}).items():
+			Cytoscape.recurse(child_obj, nodes, edges, all_nodes, has_parents)
+			edges.append(
+				{
+					"data": {
+						"id": f"{node_id}-{child_id}",
+						"source": node_id,
+						"target": child_id,
 					}
-				)
-				has_parents.add(child_id)
+				}
+			)
+			has_parents.add(child_id)
 
-		for top in document_data.values():
-			recurse(top)
-
-		root_nodes = list(all_nodes - has_parents)
-		roots_selector = ", ".join(f"#{r}" for r in root_nodes) if root_nodes else None
-
-		elements = list(nodes.values()) + edges
-
-		default_style = [
-			{
-				"selector": "node",
-				"style": {
-					"background-color": "data(color)",
-					"label": "data(label)",
-					"color": "#fff",
-					"text-valign": "center",
-					"text-halign": "center",
-					"shape": "ellipse",
-					"text-wrap": "wrap",
-					"text-max-width": "80%",
-					"font-size": "10px",
-					"text-overflow": "ellipsis",
-					"width": 80,
-					"height": 50,
-				},
-			},
-			{
-				"selector": "edge",
-				"style": {
-					"width": 2,
-					"line-color": "#bbb",
-					"target-arrow-color": "#bbb",
-					"target-arrow-shape": "triangle",
-					"curve-style": "bezier",
-				},
-			},
-		]
-
-		graph = Cytoscape(
-			object=elements,
-			style=default_style,
-			root_node=roots_selector,
-			sizing_mode="stretch_width",
-			height=600,
-			css_classes=["cytoscape-container"],
-		)
-
-		layout = pn.Column(
+	@staticmethod
+	def build_layout(graph):
+		return pn.Column(
 			pn.Row(
 				pn.Param(
 					graph,
@@ -320,4 +232,52 @@ export function render({ model }) {
 			),
 			pn.Spacer(height=30),
 		)
-		return layout
+
+	@staticmethod
+	def show_cytoscape(documents):
+		if not documents:
+			print("No documents found, returning empty graph.")
+			empty_graph = Cytoscape(
+				object=[],
+				style=Cytoscape.DEFAULT_STYLE,
+				root_node="",
+				sizing_mode="stretch_width",
+				height=600,
+				css_classes=["cytoscape-container"],
+			)
+			return Cytoscape.build_layout(empty_graph)
+
+		documents_list = ast.literal_eval(documents)
+		if isinstance(documents_list, dict):
+			documents_list = [documents_list]
+
+		print(f"Documents list: {documents_list}")
+		document_data = {
+			doc["id"]: {**doc, "children": doc.get("children", {})}
+			for doc in documents_list
+		}
+
+		print(f"Converted data list: {document_data}")
+
+		pn.extension("cytoscape", sizing_mode="stretch_width")
+
+		nodes, edges = {}, []
+		all_nodes, has_parents = set(), set()
+
+		for top in document_data.values():
+			Cytoscape.recurse(top, nodes, edges, all_nodes, has_parents)
+
+		root_nodes = list(all_nodes - has_parents)
+		roots_selector = ", ".join(f"#{r}" for r in root_nodes) if root_nodes else None
+		elements = list(nodes.values()) + edges
+
+		graph = Cytoscape(
+			object=elements,
+			style=Cytoscape.DEFAULT_STYLE,
+			root_node=roots_selector,
+			sizing_mode="stretch_width",
+			height=600,
+			css_classes=["cytoscape-container"],
+		)
+
+		return Cytoscape.build_layout(graph)

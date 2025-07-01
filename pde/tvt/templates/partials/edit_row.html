@@ -1,0 +1,37 @@
+{% load static %}
+
+<tr data-doc-id="{{ d.id }}">
+	{% for h, w, i, a in table_placeholder %}
+	<td class="table-td">
+		{% if i == "doc_type" %}
+		<select name="{{ i }}" class="table-input doc-type-select" required data-id="{{ d.id }}"></select>
+		{% else %}
+		<input type="text" name="{{ i }}" placeholder="{{ h|title }}" class="table-input" required data-id="{{ d.id }}"
+			data-field="{{ i }}">
+		{% endif %}
+	</td>
+	{% endfor %}
+
+	<td class="table-td center-class">
+		<button type="submit" name="save" class="btn-success" title="Done">✔️</button>
+		<button type="submit" name="cancel" value="true" class="btn-danger" title="Cancel"
+			onclick="removeRequired(this)">❌</button>
+	</td>
+</tr>
+
+
+<script>
+	const docData = {
+    {% for d in documents %}
+	"{{ d.id }}": {
+		doc_type: "{{ d.doc_type|escapejs }}",
+			agile_pn: "{{ d.agile_pn|escapejs }}",
+				agile_rev: "{{ d.agile_rev|escapejs }}",
+					title: "{{ d.title|escapejs }}",
+						doc_id: "{{ d.doc_id|escapejs }}"
+	} {% if not forloop.last %}, {% endif %}
+	{% endfor %}
+  };
+</script>
+
+<script src="{% static 'js/edit_row.js' %}"></script>

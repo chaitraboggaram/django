@@ -67,7 +67,7 @@ source .venv/bin/activate
 
 ### 2. Install Required Packages
 ```bash
-pip install django panel channels bokeh_django
+pip install django panel channels bokeh_django pip django-environ
 ```
 
 #### Install openpyxl for Excel Support

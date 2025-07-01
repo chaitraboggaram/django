@@ -10,3 +10,4 @@ function removeRequired(button) {
 	const row = button.closest('tr');
 	row.querySelectorAll('input, select').forEach(el => el.removeAttribute('required'));
 }
+

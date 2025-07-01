@@ -1,4 +1,5 @@
 bokeh-django==0.1.0
 channels==3.0.5
 Django==5.2.2
+django-environ==0.12.0
 panel==1.7.1
