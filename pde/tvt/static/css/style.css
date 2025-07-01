@@ -184,3 +184,7 @@ tbody tr {
 	height: 20px;
 	object-fit: contain;
 }
+
+.center-class {
+	text-align: center;
+}

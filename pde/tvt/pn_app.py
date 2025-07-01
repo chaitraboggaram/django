@@ -6,5 +6,7 @@ pn.extension()
 
 def traces(doc):
 	documents = doc.session_context.request.arguments['documents']  # Bokeh way
-	content = Traces.get_data(documents=documents)
+	generate_flag = doc.session_context.request.arguments['generate_flag']
+	print("Flag in pn_app:", generate_flag)
+	content = Traces.get_data(documents=documents, generate_flag=generate_flag)
 	content.server_doc(doc)

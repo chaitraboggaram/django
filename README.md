@@ -1293,3 +1293,5 @@ for doc in documents_list:
 	new_doc["children"] = {}
 	document_data[doc_id] = new_doc
 ```
+
+VS Code Settings `Users/ipadhu/Library/Application Support/Code/User/settings.json`

@@ -50,11 +50,11 @@ def process_form(request, redirect_url):
 				return redirect(redirect_url), False, None, None
 			else:
 				pass
-		
+
 		elif "clear" in request.POST:
 			show_input_row = True
 			form = DocumentForm()
-			
+
 		elif "delete" in request.POST:
 			doc_id = request.POST.get("delete")
 			Document.objects.filter(id=doc_id, session_key=session_key).delete()
@@ -148,7 +148,11 @@ def traces(request):
 	)
 
 	documents_data = list(documents.values())
-	script = server_document(f"/traces/", arguments={"documents": documents_data})
+
+	generate_flag = request.POST.get('generateTracesFlag', 'false').lower()
+	print("Flag in views", generate_flag)
+
+	script = server_document(f"/traces/", arguments={"documents": documents_data, "generate_flag": generate_flag})
 
 	context = {
 		"form": form,

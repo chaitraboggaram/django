@@ -10,5 +10,17 @@ Trace Visualization Tool
 {{script|safe}}
 {% include "partials/document_table.html" %}
 
-<script src="{% static 'js/document_table.js' %}"></script>
+<br>
+
+<form method="post" id="generateForm">
+	{% csrf_token %}
+	<div class="center-class">
+		<input type="hidden" name="generateTracesFlag" id="generateTracesFlag" value="false">
+		<button type="submit" name="generateTraces" class="btn-dark" id="generateBtn">
+			Generate Traces
+		</button>
+	</div>
+</form>
+
+<script src="{% static 'js/traces.js' %}"></script>
 {% endblock %}

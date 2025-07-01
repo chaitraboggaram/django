@@ -183,6 +183,8 @@ export function render({ model }) {
 		},
 	]
 
+	cytoscape_graph_cache = None
+
 	@staticmethod
 	def ensure_node_exists(node_id, nodes, doc_type, label):
 		if node_id in nodes:
@@ -234,7 +236,13 @@ export function render({ model }) {
 		)
 
 	@staticmethod
-	def show_cytoscape(documents):
+	def show_cytoscape(documents, generate_flag):
+		Cytoscape.cytoscape_graph_cache
+
+		if generate_flag != "true" and Cytoscape.cytoscape_graph_cache:
+			print("Returning cached Cytoscape graph")
+			return Cytoscape.build_layout(Cytoscape.cytoscape_graph_cache)
+
 		if not documents:
 			print("No documents found, returning empty graph.")
 			empty_graph = Cytoscape(
@@ -245,21 +253,17 @@ export function render({ model }) {
 				height=600,
 				css_classes=["cytoscape-container"],
 			)
+			Cytoscape.cytoscape_graph_cache = empty_graph
 			return Cytoscape.build_layout(empty_graph)
 
 		documents_list = ast.literal_eval(documents)
 		if isinstance(documents_list, dict):
 			documents_list = [documents_list]
 
-		print(f"Documents list: {documents_list}")
 		document_data = {
 			doc["id"]: {**doc, "children": doc.get("children", {})}
 			for doc in documents_list
 		}
-
-		print(f"Converted data list: {document_data}")
-
-		pn.extension("cytoscape", sizing_mode="stretch_width")
 
 		nodes, edges = {}, []
 		all_nodes, has_parents = set(), set()
@@ -280,4 +284,5 @@ export function render({ model }) {
 			css_classes=["cytoscape-container"],
 		)
 
+		Cytoscape.cytoscape_graph_cache = graph
 		return Cytoscape.build_layout(graph)
