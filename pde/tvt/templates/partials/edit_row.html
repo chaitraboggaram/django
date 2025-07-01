@@ -22,16 +22,16 @@
 
 <script>
 	const docData = {
-    {% for d in documents %}
-	"{{ d.id }}": {
-		doc_type: "{{ d.doc_type|escapejs }}",
+		{% for d in documents %}
+		"{{ d.id }}": {
+			doc_type: "{{ d.doc_type|escapejs }}",
 			agile_pn: "{{ d.agile_pn|escapejs }}",
-				agile_rev: "{{ d.agile_rev|escapejs }}",
-					title: "{{ d.title|escapejs }}",
-						doc_id: "{{ d.doc_id|escapejs }}"
-	} {% if not forloop.last %}, {% endif %}
-	{% endfor %}
-  };
+			agile_rev: "{{ d.agile_rev|escapejs }}",
+			title: "{{ d.title|escapejs }}",
+			doc_id: "{{ d.doc_id|escapejs }}"
+		} {% if not forloop.last %}, {% endif %}
+		{% endfor %}
+	};
 </script>
 
 <script src="{% static 'js/edit_row.js' %}"></script>
