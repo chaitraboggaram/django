@@ -205,3 +205,38 @@ tbody tr {
 	border-radius: 6px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
 }
+
+.icon-button {
+	background-color: transparent;
+	border: none;
+	padding: 6px;
+	width: 36px;
+	height: 36px;
+	border-radius: 8px;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.icon-button.add {
+	background-color: #3498db;
+}
+
+.icon-button.edit {
+	background-color: #f39c12;
+}
+
+.icon-button.delete {
+	background-color: #e74c3c;
+}
+
+.icon-button:hover {
+	filter: brightness(0.95);
+}
+
+.button-icon {
+	width: 20px;
+	height: 20px;
+	object-fit: contain;
+}

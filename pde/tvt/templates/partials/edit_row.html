@@ -13,9 +13,13 @@
 	{% endfor %}
 
 	<td class="table-td center-class">
-		<button type="submit" name="save" class="btn-success" title="Done">✔️</button>
-		<button type="submit" name="cancel" value="true" class="btn-danger" title="Cancel"
-			onclick="removeRequired(this)">❌</button>
+		<button type="submit" name="save" class="icon-button add" title="Done">
+			<img src="{% static 'images/check.png' %}" alt="Done" style="width:16px; height:16px;">
+		</button>
+		<button type="submit" name="cancel" value="true" class="icon-button delete" title="Cancel"
+			onclick="removeRequired(this)">
+			<img src="{% static 'images/cross.png' %}" alt="Cancel" style="width:16px; height:16px;">
+		</button>
 	</td>
 </tr>
 
@@ -23,14 +27,14 @@
 <script>
 	const docData = {
 		{% for d in documents %}
-		"{{ d.id }}": {
-			doc_type: "{{ d.doc_type|escapejs }}",
+	"{{ d.id }}": {
+		doc_type: "{{ d.doc_type|escapejs }}",
 			agile_pn: "{{ d.agile_pn|escapejs }}",
-			agile_rev: "{{ d.agile_rev|escapejs }}",
-			title: "{{ d.title|escapejs }}",
-			doc_id: "{{ d.doc_id|escapejs }}"
-		} {% if not forloop.last %}, {% endif %}
-		{% endfor %}
+				agile_rev: "{{ d.agile_rev|escapejs }}",
+					title: "{{ d.title|escapejs }}",
+						doc_id: "{{ d.doc_id|escapejs }}"
+	} {% if not forloop.last %}, {% endif %}
+	{% endfor %}
 	};
 </script>
 

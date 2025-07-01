@@ -1,5 +1,5 @@
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}?v=3">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 <table>
 	<thead>
@@ -30,9 +30,15 @@
 				<td class="table-td">{{ d.doc_type }}</td>
 				<td class="table-td center-class">{{ d.doc_id }}</td>
 				<td class="table-td center-class">
-					<button type="submit" name="add" class="add-button">➕</button>
-					<button type="submit" name="edit" value="{{ d.id }}" class="edit-btn" title="Edit">✏️</button>
-					<button type="submit" name="delete" value="{{ d.id }}" class="delete-button">🗑️</button>
+					<button type="submit" name="add" class="icon-button add" title="Add">
+						<img src="{% static 'images/add.png' %}" alt="Add" class="button-icon">
+					</button>
+					<button type="submit" name="edit" value="{{ d.id }}" class="icon-button edit" title="Edit">
+						<img src="{% static 'images/edit.png' %}" alt="Edit" class="button-icon">
+					</button>
+					<button type="submit" name="delete" value="{{ d.id }}" class="icon-button delete" title="Delete">
+						<img src="{% static 'images/delete.png' %}" alt="Delete" class="button-icon">
+					</button>
 				</td>
 			</tr>
 		</form>
