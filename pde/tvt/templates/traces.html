@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
 {% block title %}
-	Document Table
+Trace Visualization Tool
 {% endblock %}
 
 {% load static %}
 
 {% block content %}
-	{{script|safe}}
-	{% include "partials/document_table.html" %}
+{{script|safe}}
+{% include "partials/document_table.html" %}
 
 <script src="{% static 'js/document_table.js' %}"></script>
 {% endblock %}

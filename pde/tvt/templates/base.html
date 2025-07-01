@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,11 @@
 </head>
 
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}?v=2">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 <body>
 	<div class="navbar">
-		<img src="{% static 'images/tvt.svg' %}" style="height:40px;" />
+		<a href="../"><img src="{% static 'images/tvt.svg' %}" class="logo" /></a>
 		<ul>
 			<li><a href="../"><button type="button" class="btn-dark">Home</button></a></li>
 			<li><a href="../traces/"><button type="button" class="btn-dark">Traces</button></a></li>
@@ -20,7 +21,10 @@
 
 	<h1 class="my-title">Trace Visualization Tool</h1>
 	{% block content %}
-		<p>This is the main page!</p>
+	<p>This is the main page!</p>
 	{% endblock %}
 </body>
+
+<script src="{% static 'js/base.js' %}"></script>
+
 </html>
