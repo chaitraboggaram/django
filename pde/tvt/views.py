@@ -50,7 +50,11 @@ def process_form(request, redirect_url):
 				return redirect(redirect_url), False, None, None
 			else:
 				pass
-
+		
+		elif "clear" in request.POST:
+			show_input_row = True
+			form = DocumentForm()
+			
 		elif "delete" in request.POST:
 			doc_id = request.POST.get("delete")
 			Document.objects.filter(id=doc_id, session_key=session_key).delete()
