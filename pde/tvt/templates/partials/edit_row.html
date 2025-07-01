@@ -13,12 +13,12 @@
 	{% endfor %}
 
 	<td class="table-td center-class">
-		<button type="submit" name="save" class="icon-button add" title="Done">
-			<img src="{% static 'images/check.png' %}" alt="Done" style="width:16px; height:16px;">
+		<button type="submit" name="save" class="icon-button done" title="Done">
+			<img src="{% static 'images/check.png' %}" alt="Done" class="button-icon">
 		</button>
-		<button type="submit" name="cancel" value="true" class="icon-button delete" title="Cancel"
+		<button type="submit" name="cancel" value="true" class="icon-button cancel" title="Cancel"
 			onclick="removeRequired(this)">
-			<img src="{% static 'images/cross.png' %}" alt="Cancel" style="width:16px; height:16px;">
+			<img src="{% static 'images/cross.png' %}" alt="Cancel" class="button-icon">
 		</button>
 	</td>
 </tr>
@@ -27,14 +27,14 @@
 <script>
 	const docData = {
 		{% for d in documents %}
-	"{{ d.id }}": {
-		doc_type: "{{ d.doc_type|escapejs }}",
-			agile_pn: "{{ d.agile_pn|escapejs }}",
+			"{{ d.id }}": {
+				doc_type: "{{ d.doc_type|escapejs }}",
+				agile_pn: "{{ d.agile_pn|escapejs }}",
 				agile_rev: "{{ d.agile_rev|escapejs }}",
-					title: "{{ d.title|escapejs }}",
-						doc_id: "{{ d.doc_id|escapejs }}"
-	} {% if not forloop.last %}, {% endif %}
-	{% endfor %}
+				title: "{{ d.title|escapejs }}",
+				doc_id: "{{ d.doc_id|escapejs }}"
+			} {% if not forloop.last %}, {% endif %}
+		{% endfor %}
 	};
 </script>
 

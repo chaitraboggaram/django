@@ -54,7 +54,7 @@
 }
 
 .btn-dark:hover {
-	background-color: #23272b;
+	background-color: #6c757d;
 	color: #fff;
 }
 
@@ -85,20 +85,6 @@ form {
 	border-radius: 6px;
 }
 
-button {
-	background-color: #3498db;
-	color: white;
-	border: none;
-	padding: 6px 10px;
-	font-size: 14px;
-	border-radius: 4px;
-	cursor: pointer;
-}
-
-button:hover {
-	background-color: #2980b9;
-}
-
 table {
 	width: 100%;
 	border-collapse: collapse;
@@ -109,39 +95,6 @@ table {
 
 .action-form {
 	display: inline;
-}
-
-.delete-button {
-	background-color: #e74c3c;
-	padding: 6px 10px;
-	border-radius: 4px;
-	color: white;
-}
-
-.delete-button:hover {
-	background-color: #c0392b;
-}
-
-.add-button {
-	background-color: #3498db;
-	padding: 6px 10px;
-	border-radius: 4px;
-	color: white;
-}
-
-.add-button:hover {
-	background-color: #2980b9;
-}
-
-.edit-btn {
-	background-color: #f39c12;
-	padding: 6px 10px;
-	border-radius: 4px;
-	color: white;
-}
-
-.edit-btn:hover {
-	background-color: #e67e22;
 }
 
 @media (max-width: 768px) {
@@ -174,24 +127,6 @@ table {
 	resize: none;
 }
 
-.btn-success {
-	color: #fff;
-	background-color: #5cb85c;
-	border-color: #4cae4c;
-}
-
-.btn-warning {
-	color: #fff;
-	background-color: #f0ad4e;
-	border-color: #eea236;
-}
-
-.btn-danger {
-	color: #fff;
-	background-color: #d9534f;
-	border-color: #d43f3a;
-}
-
 .table-td {
 	padding: 8px 10px;
 }
@@ -212,11 +147,11 @@ tbody tr {
 	padding: 6px;
 	width: 36px;
 	height: 36px;
-	border-radius: 8px;
+	border-radius: 4px;
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
-	transition: background-color 0.2s ease;
+	transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .icon-button.add {
@@ -231,8 +166,20 @@ tbody tr {
 	background-color: #e74c3c;
 }
 
+.icon-button.done {
+	background-color: #5cb85c;
+}
+
+.icon-button.clear {
+	background-color: #f1c40f;
+}
+
+.icon-button.cancel {
+	background-color: #9b59b6;
+}
+
 .icon-button:hover {
-	filter: brightness(0.95);
+	filter: brightness(0.75);
 }
 
 .button-icon {

@@ -1,5 +1,4 @@
 {% load static %}
-
 <form method="post" id="input-form">
 	{% csrf_token %}
 	<tr id="input-row">
@@ -22,15 +21,15 @@
 		</td>
 		{% endfor %}
 		<td class="table-td center-class">
-			<button type="submit" name="add" class="icon-button add" title="Done">
-				<img src="{% static 'images/check.png' %}" alt="Done" style="width:16px; height:16px;">
+			<button type="submit" name="add" class="icon-button done" title="Done">
+				<img src="{% static 'images/check.png' %}" alt="Done" class="button-icon">
 			</button>
-			<button type="button" class="icon-button delete" title="Clear" onclick="clearRow(this)">
-				<img src="{% static 'images/clear.png' %}" alt="Clear" style="width:16px; height:16px;">
+			<button type="button" class="icon-button clear" title="Clear" onclick="clearRow(this)">
+				<img src="{% static 'images/clear.png' %}" alt="Clear" class="button-icon">
 			</button>
-			<button type="submit" name="cancel" value="true" class="icon-button delete" title="Cancel"
+			<button type="submit" name="cancel" value="true" class="icon-button cancel" title="Cancel"
 				onclick="removeRequired(this)">
-				<img src="{% static 'images/cross.png' %}" alt="Cancel" style="width:16px; height:16px;">
+				<img src="{% static 'images/cross.png' %}" alt="Cancel" class="button-icon">
 			</button>
 		</td>
 	</tr>
