@@ -1,13 +1,32 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Parallel Edits
+Parallel Edits
 {% endblock %}
 
 {% load static %}
 
-{% block content %}    
-	{% include "partials/document_table.html" %}
+{% block content %}
 
-    <script src="{% static 'js/document_table.js' %}"></script>
+<form method="post" class="action-form" id="upload-form">
+    {% csrf_token %}
+    <div class="center-file-input">
+        <input type="file" id="file-upload" name="file-upload" class="custom-input" accept=".csv" required>
+        <label for="file-upload" class="file-icon-label" title="Upload CSV">
+            <img src="{% static 'images/upload.png' %}" class="file-icon">
+        </label>
+        <input type="hidden" name="csv_data" id="csv-data-input">
+        <button type="button" class="btn-dark" id="csvData">
+            Read File
+        </button>
+    </div>
+</form>
+
+<br><br>
+
+{% include "partials/document_table.html" %}
+
+<script src="{% static 'js/home.js' %}"></script>
+<script src="{% static 'js/document_table.js' %}"></script>
+
 {% endblock %}
