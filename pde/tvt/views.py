@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from .models import Document
 from .forms import DocumentForm
 from bokeh.embed import server_document
@@ -10,7 +10,7 @@ def get_session_key(request):
 	return request.session.session_key
 
 
-def process_form(request, redirect_url):
+def process_form(request):
 	session_key = get_session_key(request)
 	show_input_row = False
 	edit_id = None
@@ -25,31 +25,20 @@ def process_form(request, redirect_url):
 				doc = form.save(commit=False)
 				doc.session_key = session_key
 				doc.save()
-				return redirect(redirect_url), False, None, None
 			else:
 				show_input_row = True
 
 		elif "edit" in request.POST:
 			edit_id = request.POST.get("edit")
-			try:
-				doc_to_edit = Document.objects.get(id=edit_id, session_key=session_key)
-				form = DocumentForm(instance=doc_to_edit)
-			except Document.DoesNotExist:
-				return redirect(redirect_url), False, None, None
+			doc_to_edit = Document.objects.get(id=edit_id, session_key=session_key)
+			form = DocumentForm(instance=doc_to_edit)
 
 		elif "save" in request.POST:
 			edit_id = request.POST.get("edit_id")
-			try:
-				doc_to_edit = Document.objects.get(id=edit_id, session_key=session_key)
-			except Document.DoesNotExist:
-				return redirect(redirect_url), False, None, None
-
+			doc_to_edit = Document.objects.get(id=edit_id, session_key=session_key)
 			form = DocumentForm(request.POST, instance=doc_to_edit)
 			if form.is_valid():
 				form.save()
-				return redirect(redirect_url), False, None, None
-			else:
-				pass
 
 		elif "clear" in request.POST:
 			show_input_row = True
@@ -58,10 +47,6 @@ def process_form(request, redirect_url):
 		elif "delete" in request.POST:
 			doc_id = request.POST.get("delete")
 			Document.objects.filter(id=doc_id, session_key=session_key).delete()
-			return redirect(redirect_url), False, None, None
-
-		elif "cancel" in request.POST:
-			return redirect(redirect_url), False, None, None
 
 	else:
 		form = DocumentForm()
@@ -104,9 +89,8 @@ def get_documents_and_headers(session_key):
 
 def home(request):
 	session_key = get_session_key(request)
-	redirect_url = "home"
 
-	response, show_input_row, form, edit_id = process_form(request, redirect_url)
+	response, show_input_row, form, edit_id = process_form(request)
 	if response:
 		return response
 
@@ -137,9 +121,8 @@ def home(request):
 
 def traces(request):
 	session_key = get_session_key(request)
-	redirect_url = "traces"
 
-	response, show_input_row, form, edit_id = process_form(request, redirect_url)
+	response, show_input_row, form, edit_id = process_form(request)
 	if response:
 		return response
 
