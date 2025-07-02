@@ -130,12 +130,12 @@ def traces(request):
 		session_key
 	)
 
-	documents_data = list(documents.values())
+	documents = list(documents.values())
 
-	generate_flag = request.POST.get('generateTracesFlag', 'false').lower()
-	print("Flag in views", generate_flag)
+	generate_cytoscape = request.POST.get('generate_cytoscape', 'false').lower()
+	print("Flag in views", generate_cytoscape)
 
-	script = server_document(f"/traces/", arguments={"documents": documents_data, "generate_flag": generate_flag})
+	script = server_document(f"/traces/", arguments={"documents": documents, "generate_cytoscape": generate_cytoscape})
 
 	context = {
 		"form": form,

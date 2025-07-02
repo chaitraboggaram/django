@@ -1,3 +1,3 @@
 document.getElementById('generateForm').addEventListener('submit', function () {
-	document.getElementById('generateTracesFlag').value = 'true';
+	document.getElementById('generate_cytoscape').value = 'true';
 });

@@ -7,8 +7,8 @@ pn.config.raw_css.append('@import url("/static/css/style.css");')
 
 class Traces:
 	@staticmethod
-	def get_data(documents, generate_flag):
-		print("Flag in get_data", generate_flag)
+	def get_data(documents, generate_cytoscape):
+		print("Flag in get_data", generate_cytoscape)
 
 		tableTitle = pn.pane.Markdown(
 			"### Traces Table",
@@ -23,7 +23,7 @@ class Traces:
 		)
 
 		documents = documents[1:-1]
-		cyto = Cyto.show_cytoscape(documents, generate_flag)
+		cyto = Cyto.show_cytoscape(documents, generate_cytoscape)
 		layout = pn.Column(cytoTitle, cyto, tableTitle)
 
 		return layout

@@ -236,10 +236,10 @@ export function render({ model }) {
 		)
 
 	@staticmethod
-	def show_cytoscape(documents, generate_flag):
+	def show_cytoscape(documents, generate_cytoscape):
 		Cytoscape.cytoscape_graph_cache
 
-		if generate_flag != "true" and Cytoscape.cytoscape_graph_cache:
+		if generate_cytoscape != "true" and Cytoscape.cytoscape_graph_cache:
 			print("Returning cached Cytoscape graph")
 			return Cytoscape.build_layout(Cytoscape.cytoscape_graph_cache)
 
